@@ -23,7 +23,7 @@ const MovieDetails = () => {
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const movieResponse = await fetch(`http://www.omdbapi.com/?i=${movieId}&apikey=${key}&h=highres`);
+        const movieResponse = await fetch(`https://www.omdbapi.com/?i=${movieId}&apikey=${key}&h=highres`);
         const movieData = await movieResponse.json();
         setSelectedMovie(movieData);
       } catch (error) {
