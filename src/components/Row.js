@@ -10,10 +10,10 @@ import { Link } from 'react-router-dom';
 
 const key = '6c8d75f0';
 const requests = {
-  requestPopular: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=marvel`,
-  requestTopRated: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=evil dead`,
-  requestTrending: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=titans`,
-  requestUpcoming: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=batman`,
+  requestPopular: `https://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=marvel`,
+  requestTopRated: `https://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=evil dead`,
+  requestTrending: `https://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=titans`,
+  requestUpcoming: `https://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=batman`,
 };
 
 const Row = () => {

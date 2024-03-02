@@ -9,7 +9,7 @@ import './MovieDetail.css';
 
 const key = '6c8d75f0';
 const requests = {
-  requestUpcoming: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=movie`,
+  requestUpcoming: `https://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=movie`,
 };
 
 const MovieDetails = () => {
