@@ -1,60 +1,115 @@
-// MovieDetails.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar1 from './Navbar1';
 import { useLocation } from 'react-router-dom';
-import './MovieDetail.css'; // Import the CSS file
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './MovieDetail.css';
+
+const key = '6c8d75f0';
+const requests = {
+  requestUpcoming: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=movie`,
+};
 
 const MovieDetails = () => {
   const location = useLocation();
-  const movie = location.state?.movie;
+  const movieId = location.pathname.split('/').pop();
+  console.log("Movie ID:", movieId);
 
-  if (!movie) {
-    return <div>No movie details available</div>;
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        const movieResponse = await fetch(`http://www.omdbapi.com/?i=${movieId}&apikey=${key}&h=highres`);
+        const movieData = await movieResponse.json();
+        setSelectedMovie(movieData);
+      } catch (error) {
+        console.error('Error fetching movie details:', error);
+      }
+    };
+
+    const fetchUpcomingMovies = async () => {
+      try {
+        const upcomingResponse = await axios.get(requests.requestUpcoming);
+        setUpcomingMovies(upcomingResponse.data.Search || []);
+      } catch (error) {
+        console.error('Error fetching upcoming movies:', error);
+      }
+    };
+
+    if (movieId) {
+      // Fetch movie details only if movieId is present
+      fetchMovieDetails();
+    }
+
+    // Fetch upcoming movies regardless of movieId
+    fetchUpcomingMovies();
+  }, [movieId]);
+
+  if (!selectedMovie) {
+    console.log("No movie selected:", selectedMovie);
+    return <div className="no-movie-selected">No movie selected</div>;
   }
+
+  // Log the poster URL to the console
+  console.log("Poster URL:", selectedMovie.Poster);
+
+  // Check if the poster URL is valid
+  if (!selectedMovie.Poster || selectedMovie.Poster === 'N/A') {
+    console.log("No valid poster URL:", selectedMovie.Poster);
+    return <div className="no-movie-poster">No poster available</div>;
+  }
+
+  // Settings for the carousel
+  const carouselSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+  };
+
   return (
-    <div className="movie-details">
-      <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-      <img href="./10-03-25.mp4 "className="ri-add-fill-icon1 alt" src="/32fef650-d748-46ed-a256-459e2dd16bd6_1708092302683693600.svg" /> 
-        <div className="types">
-            <div className="action">Action</div>
-          </div>
-          <div className="types1">
-            <div className="action">Science Fiction</div>
-          </div>
-          <div className="types2">
-            <div className="action">Suspense</div>
-          </div>
-          <div className="types3">
-            <div className="action">Drama</div>
-          </div>
-          <br></br>
-      <p >Overview: {movie.overview}</p>
-      {/* <p >Original Language: {movie.original_language}</p> */}
-      {/* <div  className="h-30-mi">Popularity: {movie.popularity}</div> */}
-     
-      <div className="more-like-this">More Like This</div>
-      <div className="movie-sec-41">
-        <div className="movies3">
-       
-          <img className="fan-img2-icon3" alt="" src="https://thebridge.in/wp-content/uploads/2019/12/Mary-Kom-717x1024.jpg" />
-          <img className="fan-img3-icon3" alt="" src="https://www.scrolldroll.com/wp-content/uploads/2021/01/chillar-party-bollywood-movies-for-kids.jpg" />
-          <img className="fan-img4-icon3" alt="" src="https://m.media-amazon.com/images/I/A1JVqNMI7UL._SY606_.jpg" />
-          <img className="fan-img5-1-icon3" alt="" src="https://upload.wikimedia.org/wikipedia/en/7/71/Ride_On_2023.png" />
-          <img className="fan-img5-2-icon3" alt="" src="https://en-images.kinorium.com/movie/600/2411523.jpg?1668569428" />
-          <img className="fan-img6-icon3" alt="" src="https://bestsimilar.com/img/movie/thumb/c2/18736.jpg" />
-          <img className="fan-img7-icon3" alt="" src="https://best-of-netflix.com/static/uploads/4/2020/11/The-10-best-%E2%80%98feel-good-anime-films-on-Netflix.jpg" />
-          <img className="fan-img8-icon3" alt="" src="https://bestsimilar.com/img/movie/thumb/c2/18736.jpg" />
-        </div>
+    <div className="movie-details-container">
+      <img src={selectedMovie.Poster} alt={selectedMovie.Title} className="movie-poster" />
+      <h2>{selectedMovie.Title}</h2>
+      <p className="movie-plot">{selectedMovie.Plot}</p>
+      <p>Year: {selectedMovie.Year}</p>
+      <p>Director: {selectedMovie.Director}</p>
+      <p>Actors: {selectedMovie.Actors}</p>
+      <p>Plot: {selectedMovie.Plot}</p>
+      <img className="ri-add-fill-icon1 alt" src="/32fef650-d748-46ed-a256-459e2dd16bd6_1708092302683693600.svg" /> 
+      <div className="types">
+        <div className="action">Action</div>
       </div>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <Navbar1/>
+      <div className="types1">
+        <div className="action">Science Fiction</div>
+      </div>
+      <div className="types2">
+        <div className="action">Suspense</div>
+      </div>
+      <div className="types3">
+        <div className="action">Drama</div>
+      </div>
+      <br />
+      <h3 className='maylike'>May like This</h3>
+      <Slider {...carouselSettings}>
+        {upcomingMovies.map((upcomingMovie) => (
+          <div key={upcomingMovie.imdbID} style={{ margin: '20px' }}>
+            <h4>{upcomingMovie.Title}</h4>
+            <img
+              src={upcomingMovie.Poster}
+              alt={upcomingMovie.Title}
+              style={{ width: '300px', height: '300px' }}
+            />
+          </div>
+        ))}
+      </Slider>
+      <Navbar1 />
     </div>
-    
   );
 };
 

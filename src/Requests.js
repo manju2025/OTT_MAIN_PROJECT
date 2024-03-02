@@ -1,11 +1,11 @@
-const key='1c7be2a578242f5a1f9c6af78735a4b1'
+const key='6c8d75f0'
 
 const requests = {
-    requestPopular: `https://api.themoviedb.org/3/movie/popular?api_key=${key}&language=en-US&page=1`,
-    requestTopRated: `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`,
-    requestTrending: `https://api.themoviedb.org/3/movie/popular?api_key=${key}&language=en-US&page=2`,
-    requestHorror: `https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=horror&page=1&include_adult=false`,
-    requestUpcoming: `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=1`,
+    requestPopular: ` http://www.omdbapi.com/?i=tt3896198&apikey=6c8d75f0&s=horror`,
+    requestTopRated: `http://www.omdbapi.com/?i=tt3896198&apikey=6c8d75f0&s=evil`,
+    requestTrending: `http://www.omdbapi.com/?i=tt3896198&apikey=6c8d75f0&s=marvel`,
+    // requestHorror: `http://www.omdbapi.com/?i=tt3896198&apikey=6c8d75f0&s=jaws`,
+    requestUpcoming: `http://www.omdbapi.com/?i=tt3896198&apikey=6c8d75f0&s=jaws`,
   };
 
   export default  requests;

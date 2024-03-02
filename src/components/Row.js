@@ -1,21 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import MovieDetails from './MovieDetails'; 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css'; 
+import 'slick-carousel/slick/slick-theme.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import "./Row.css";
+import MovieDetails from './MovieDetails';
+import { Link } from 'react-router-dom';
 
-const Row = ({ title, fetchURL }) => {
-  const [movies, setMovies] = useState([]);
+const key = '6c8d75f0';
+const requests = {
+  requestPopular: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=marvel`,
+  requestTopRated: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=evil dead`,
+  requestTrending: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=titans`,
+  requestUpcoming: `http://www.omdbapi.com/?i=tt3896198&apikey=${key}&s=batman`,
+};
+
+const Row = () => {
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
 
   useEffect(() => {
-    axios.get(fetchURL).then((response) => {
-      setMovies(response.data.results);
-    });
-  }, [fetchURL]);
+    const fetchMovies = async () => {
+      try {
+        const popularResponse = await axios.get(requests.requestPopular);
+        const topRatedResponse = await axios.get(requests.requestTopRated);
+        const trendingResponse = await axios.get(requests.requestTrending);
+        const upcomingResponse = await axios.get(requests.requestUpcoming);
+
+        setPopularMovies(popularResponse.data.Search || []);
+        setTopRatedMovies(topRatedResponse.data.Search || []);
+        setTrendingMovies(trendingResponse.data.Search || []);
+        setUpcomingMovies(upcomingResponse.data.Search || []);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      }
+    };
+
+    fetchMovies();
+  }, []);
 
   const NextArrow = ({ onClick }) => (
     <div className="slick-arrow slick-next" onClick={onClick}>
@@ -28,58 +53,87 @@ const Row = ({ title, fetchURL }) => {
       <FaChevronLeft />
     </div>
   );
-  const settings = {
+
+  const sliderSettings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 9,
+    slidesToShow: 4,
     slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-    className: 'dark-carousel',
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
 
   return (
-    <div className="homepage">
-      <h2 className="title">{title}</h2>
-      <Slider {...settings}>
-        {movies.map((item, id) => (
-          <div className='custom-width inline-block cursor-pointer relative padding-2' key={id}>
-                <Link to={`/movie-details/${item.id}`}state={{ movie: item }}>
+    <div>
+      <h2 className='title'>Popular Movies</h2>
+      <Slider {...sliderSettings}>
+        {popularMovies.map((movie) => (
+          <div key={movie.imdbID} style={{ margin: '10px' }}>
+            <Link to={`/movie-details/${movie.imdbID}`} onClick={() => handleMovieClick(movie)}>
+            <h3 className="movie-title"
+            >{movie.Title}</h3>
             <img
-              className='full-width auto-height block'
-              src={`https://image.tmdb.org/t/p/w154${item.poster_path}`}
-
-              alt="Movie Poster"
+              src={movie.Poster}
+              alt={movie.Title}
+              style={{ width: '300px', height: '305px' }}
             />
-            <div className='absolute-overlay hover:bg-black/80 text-white'>
-              <p>{item?.title}</p>
-            </div>
             </Link>
           </div>
         ))}
       </Slider>
-      <MovieDetails />
+
+      <h2 className='title'>Top Rated Movies</h2>
+      <Slider {...sliderSettings}>
+        {topRatedMovies.map((movie) => (
+          <div key={movie.imdbID} style={{ margin: '10px' }}>
+              <Link to={`/movie-details/${movie.imdbID}`} onClick={() => handleMovieClick(movie)}>
+            <h3 className="movie-title">{movie.Title}</h3>
+            <img
+              src={movie.Poster}
+              alt={movie.Title}
+              style={{ width: '300px', height: '305px' }}
+            />
+            </Link>
+          </div>
+        ))}
+      </Slider>
+
+      <h2 className='title'>Trending Movies</h2>
+      <Slider {...sliderSettings}>
+        {trendingMovies.map((movie) => (
+          <div key={movie.imdbID} style={{ margin: '10px' }}>
+             <Link to={`/movie-details/${movie.imdbID}`} onClick={() => handleMovieClick(movie)}>
+            <h3 className="movie-title">{movie.Title}</h3>
+            <img
+              src={movie.Poster}
+              alt={movie.Title}
+              style={{ width: '300px', height: '305px' }}
+            />
+            </Link>
+          </div>
+        ))}
+      </Slider>
+
+      <h2 className='title'>Upcoming Movies</h2>
+      <Slider {...sliderSettings}>
+        {upcomingMovies.map((movie) => (
+          <div key={movie.imdbID} style={{ margin: '10px' }}>
+             <Link to={`/movie-details/${movie.imdbID}`} onClick={() => handleMovieClick(movie)}>
+            <h3 className="movie-title">{movie.Title}</h3>
+            <img
+              src={movie.Poster}
+              alt={movie.Title}
+              style={{ width: '300px', height: '305px' }}
+            />
+            </Link>
+          </div>
+        ))}
+      </Slider>
     </div>
   );
 };

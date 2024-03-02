@@ -31,11 +31,10 @@ const Main = () => {
       <div className="blade-runner-2049-parent">
         <b className="blade-runner-2049">Tenet</b>
         <div className="thirty-years-after">
-          Thirty years after the events of the first film, a new blade runner,
-          LAPD Officer K (Ryan Gosling), unearths a long buried secret that has
-          the potential to plunge what’s left of society into chaos. K’s
-          discovery leads him on a quest to find Rick Deckard (Harrison Ford), a
-          former LAPD blade runner who has been missing for 30 years.
+        A secret agent is given a single word as 
+        his weapon and sent to prevent the onset of World War III.
+         He must travel through time and bend the laws of nature 
+         in order to be successful in his mission.
         </div>
         <div className="rectangle-parent">
           <div className="rectangle-div" />
