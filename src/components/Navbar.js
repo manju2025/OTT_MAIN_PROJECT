@@ -40,10 +40,10 @@ const Navbar = () => {
           ):(
             <div className='auth-buttons'>
     <Link to="/login">
-      <button className='sign-in-button'>Sign In</button>
+      <button className='sign-in-button'>Account</button>
       </Link>
       <Link to="/signup">
-      <button className='sign-up-button'>Sign Up</button>
+      <button className='sign-up-button'>Logout</button>
       </Link>
     </div>
           )}
